@@ -2,14 +2,29 @@
 #include<libtransistor/util.h>
 #include<libtransistor/svc.h>
 #include<libtransistor/ipc/bsd.h>
+#include<libtransistor/ipc/sm.h>
 
 #include<assert.h>
 #include<stdio.h>
 #include<string.h>
+#include<unistd.h>
+#include<errno.h>
 
 #include<ssp/ssp.h>
 
 int main(int argc, char **argv);
+
+#define make_ip(a,b,c,d)	((a) | ((b) << 8) | ((c) << 16) | ((d) << 24))
+
+struct sockaddr_in stdout_server_addr =
+{
+	.sin_family = AF_INET,
+	.sin_port = htons(2991),
+	.sin_addr = {
+		.s_addr = make_ip(91, 121, 81, 160)
+	}
+};
+
 
 // from util.c
 extern size_t log_length;
@@ -175,6 +190,26 @@ int _libtransistor_start(libtransistor_context_t *ctx, void *aslr_base) {
 			return -5;
 		}
 		libtransistor_context->mem_size = DEFAULT_NOCONTEXT_HEAP_SIZE;
+
+		do {
+			if (sm_init() != RESULT_OK)
+				break;
+			if (bsd_init() != RESULT_OK)
+				break;
+			int std_sck = bsd_socket(AF_INET, SOCK_STREAM, 6); // PROTO_TCP
+			if(std_sck < 0)
+				break;
+			// connect to stdout server, optional
+			if(bsd_connect(std_sck, (struct sockaddr*) &stdout_server_addr, sizeof(stdout_server_addr)) < 0)
+			{
+				bsd_close(std_sck);
+				std_sck = -1; // invalidate
+			}
+			if (std_sck >= 0) {
+				libtransistor_context->std_socket = std_sck;
+				libtransistor_context->has_bsd = true;
+			}
+		} while(0);
 	}
 
 	dbg_printf("init stdio");

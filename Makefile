@@ -15,7 +15,7 @@ export CC_FOR_TARGET = $(CC)
 export AS_FOR_TARGET = $(AS) -arch=aarch64 -mattr=+neon
 export AR_FOR_TARGET = $(AR)
 export RANLIB_FOR_TARGET = llvm-ranlib$(LLVM_POSTFIX)
-export CFLAGS_FOR_TARGET = $(CC_FLAGS) -Wno-unused-command-line-argument
+export CFLAGS_FOR_TARGET = $(CC_FLAGS) -Wno-unused-command-line-argument -fstack-protector-all
 
 .SUFFIXES: # disable built-in rules
 
@@ -82,6 +82,9 @@ $(LIBTRANSISTOR_HOME)/newlib/Makefile:
 
 $(LIBTRANSISTOR_HOME)/newlib/aarch64-none-switch/newlib/libc.a: $(LIBTRANSISTOR_HOME)/newlib/Makefile
 	$(MAKE) -C $(LIBTRANSISTOR_HOME)/newlib/
+
+# Always run make, let newlib decide if it needs a rebuild
+.PHONY: $(LIBTRANSISTOR_HOME)/newlib/aarch64-none-switch/newlib/libc.a
 
 $(LIBTRANSISTOR_HOME)/libssp/libssp.a:
 	$(MAKE) -C $(LIBTRANSISTOR_HOME)/libssp

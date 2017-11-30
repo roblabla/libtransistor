@@ -17,7 +17,7 @@ LD_FLAGS := -Bsymbolic --shared --emit-relocs --no-gc-sections --no-undefined -T
 CC_FLAGS := -g -fPIC -ffreestanding -fexceptions -O0 -mtune=cortex-a53 -target aarch64-none-linux-gnu -nostdlib -nostdlibinc $(INCLUDES) $(WARNINGS)
 AR_FLAGS := rcs
 # for compatiblity
-CFLAGS := $(CC_FLAGS)
+CFLAGS := $(CC_FLAGS) -fstack-protector-all
 AS_FLAGS := -arch=aarch64 -triple aarch64-none-switch
 PYTHON2 := python2
 MEPHISTO := ctu
