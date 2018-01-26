@@ -47,6 +47,19 @@ NORELOC_BSS_START_ = .;
 NORELOC_BSS_END_ = .;
   }
 
+  .tdata : ALIGN(0x8) {
+NORELOC_TDATA_START_ = .;
+    *(.tdata)
+NORELOC_TDATA_END_ = .;
+  }
+
+  .tbss : ALIGN(0x8) {
+NORELOC_TBSS_START_ = .;
+    *(.tbss)
+    *(.tcommon)
+NORELOC_TBSS_END_ = .;
+  }
+
   .hash : {
     *(.hash)
   }

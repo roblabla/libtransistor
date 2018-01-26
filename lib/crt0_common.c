@@ -126,6 +126,12 @@ static int bsslog_write(struct _reent *reent, void *v, const char *ptr, int len)
 
 static bool dont_finalize_bsd = false;
 
+// Set in the linker script.
+extern u8 *NORELOC_TDATA_START_;
+extern u8 *NORELOC_TDATA_END_;
+extern u8 *NORELOC_TBSS_START_;
+extern u8 *NORELOC_TBSS_END_;
+
 int _libtransistor_start(libtransistor_context_t *ctx, void *aslr_base) {
 	if(relocate(aslr_base)) {
 		return -4;

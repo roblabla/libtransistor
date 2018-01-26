@@ -15,6 +15,10 @@
 .hidden NORELOC_DATA_END_
 .hidden NORELOC_BSS_START_
 .hidden NORELOC_BSS_END_
+.hidden NORELOC_TBSS_START_
+.hidden NORELOC_TBSS_END_
+.hidden NORELOC_TDATA_START_
+.hidden NORELOC_TDATA_END_
 
 .section .text, "e"
 NORELOC__filestart:
